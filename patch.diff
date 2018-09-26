@@ -1,0 +1,56 @@
+diff --git a/libraries/classes/Menu.php b/libraries/classes/Menu.php
+index 4e34ac8f01..7f868630d3 100644
+--- a/libraries/classes/Menu.php
++++ b/libraries/classes/Menu.php
+@@ -202,7 +202,14 @@ class Menu
+         }
+         $item .= '%3$s</a>';
+         $retval .= "<div id='floating_menubar'></div>";
+-        $retval .= "<div id='serverinfo'>";
++		$mysql_cur_user_and_host = $GLOBALS['dbi']->fetchValue('SELECT USER();');
++		if (strncmp($mysql_cur_user_and_host,'cpl_ro',4)===0 || strncmp($mysql_cur_user_and_host,'readonly',4)===0) {
++		    $retval .= "<div id='serverinfo' style='background-color:#00b000;'>";
++		} elseif (strncmp($mysql_cur_user_and_host,'root',4)===0) {
++		    $retval .= "<div id='serverinfo' style='background-color:#b00000;'>";
++		} else {
++	        $retval .= "<div id='serverinfo'>";
++		}
+         if (Util::showIcons('TabsMode')) {
+             $retval .= Util::getImage(
+                 's_host',
+@@ -320,7 +327,8 @@ class Menu
+                 }
+             }
+         }
+-        $retval .= '<div class="clearfloat"></div>';
++		$retval .= ' &nbsp; &nbsp; || &nbsp; <span style="color:#ffff80;">USER='.$mysql_cur_user_and_host.'</span>';
++		$retval .= '<div class="clearfloat"></div>';
+         $retval .= '</div>';
+         return $retval;
+     }
+diff --git a/themes/pmahomme/layout.inc.php b/themes/pmahomme/layout.inc.php
+index 6ac5ddce5b..12c40be7ef 100644
+--- a/themes/pmahomme/layout.inc.php
++++ b/themes/pmahomme/layout.inc.php
+@@ -33,7 +33,20 @@ $GLOBALS['cfg']['NaviPointerBackground']    = '#ddd';
+ $GLOBALS['cfg']['MainColor']                = '#444';
+ 
+ // background for the main frame
+-$GLOBALS['cfg']['MainBackground']           = '#fff';
++// $GLOBALS['cfg']['MainBackground']           = '#fff';
++if (@file_exists('/srv/hadata/cluster/webdata/mpoadmin/')) {  // Cluster ?? ffcce0
++	$GLOBALS['cfg']['MainBackground']           = '#ffcce0';
++} elseif (substr_compare($_SERVER['SERVER_NAME'], 'geithspace.de',-13,13,TRUE)===0) { // Geithspace.de ???
++	$GLOBALS['cfg']['MainBackground']           = '#ffe6f3';
++} elseif (substr_compare($_SERVER['SERVER_NAME'], '.dev',-4,4,TRUE)===0 || substr_compare($_SERVER['SERVER_NAME'], '.local',-6,6,TRUE)===0) { // Vagrant dev/test-Server ? e6ffe6
++	$GLOBALS['cfg']['MainBackground']           = '#e6ffe6';
++} elseif (substr_compare($_SERVER['SERVER_NAME'], 'orga.cpl-web.de',-15,15,TRUE)===0) { // Orga ???
++	$GLOBALS['cfg']['MainBackground']           = '#ffeecc';
++} elseif (substr_compare($_SERVER['SERVER_NAME'], 'geithwork.de',-12,12,TRUE)===0) { // Geithwork.de ???
++	$GLOBALS['cfg']['MainBackground']           = '#f2ffcc';
++} else {
++	$GLOBALS['cfg']['MainBackground']           = '#ffffff';
++}
+ 
+ // foreground (text) color of the pointer in browse mode
+ $GLOBALS['cfg']['BrowsePointerColor']       = '#000';

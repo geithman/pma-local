@@ -33,7 +33,20 @@ $GLOBALS['cfg']['NaviPointerBackground']    = '#ddd';
 $GLOBALS['cfg']['MainColor']                = '#444';
 
 // background for the main frame
-$GLOBALS['cfg']['MainBackground']           = '#fff';
+// $GLOBALS['cfg']['MainBackground']           = '#fff';
+if (@file_exists('/srv/hadata/cluster/webdata/mpoadmin/')) {  // Cluster ?? ffcce0
+	$GLOBALS['cfg']['MainBackground']           = '#ffcce0';
+} elseif (substr_compare($_SERVER['SERVER_NAME'], 'geithspace.de',-13,13,TRUE)===0) { // Geithspace.de ???
+	$GLOBALS['cfg']['MainBackground']           = '#ffe6f3';
+} elseif (substr_compare($_SERVER['SERVER_NAME'], '.dev',-4,4,TRUE)===0 || substr_compare($_SERVER['SERVER_NAME'], '.local',-6,6,TRUE)===0) { // Vagrant dev/test-Server ? e6ffe6
+	$GLOBALS['cfg']['MainBackground']           = '#e6ffe6';
+} elseif (substr_compare($_SERVER['SERVER_NAME'], 'orga.cpl-web.de',-15,15,TRUE)===0) { // Orga ???
+	$GLOBALS['cfg']['MainBackground']           = '#ffeecc';
+} elseif (substr_compare($_SERVER['SERVER_NAME'], 'geithwork.de',-12,12,TRUE)===0) { // Geithwork.de ???
+	$GLOBALS['cfg']['MainBackground']           = '#f2ffcc';
+} else {
+	$GLOBALS['cfg']['MainBackground']           = '#ffffff';
+}
 
 // foreground (text) color of the pointer in browse mode
 $GLOBALS['cfg']['BrowsePointerColor']       = '#000';
