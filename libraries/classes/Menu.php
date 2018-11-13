@@ -202,7 +202,8 @@ class Menu
         }
         $item .= '%3$s</a>';
         $retval .= "<div id='floating_menubar'></div>";
-		$mysql_cur_user_and_host = $GLOBALS['dbi']->fetchValue('SELECT USER();');
+		$mysql_cur_user_and_host = $GLOBALS['dbi']->fetchValue('SELECT USER();') .
+                (isset($_SERVER['SERVERTYPE']) ? ' on Server <b>'.$_SERVER['SERVERTYPE'] .'</b>' : '');
 		if (strncmp($mysql_cur_user_and_host,'cpl_ro',4)===0 || strncmp($mysql_cur_user_and_host,'readonly',4)===0) {
 		    $retval .= "<div id='serverinfo' style='background-color:#00b000;'>";
 		} elseif (strncmp($mysql_cur_user_and_host,'root',4)===0) {

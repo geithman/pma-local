@@ -37,7 +37,7 @@ $GLOBALS['cfg']['MainColor']                = '#444';
 if (@file_exists('/srv/hadata/cluster/webdata/mpoadmin/')) {  // Cluster ?? ffcce0
 	$GLOBALS['cfg']['MainBackground']           = '#ffcce0';
 } elseif (substr_compare($_SERVER['SERVER_NAME'], 'geithspace.de',-13,13,TRUE)===0) { // Geithspace.de ???
-	$GLOBALS['cfg']['MainBackground']           = '#ffe6f3';
+	$GLOBALS['cfg']['MainBackground']           = '#f2ffcc';
 } elseif (substr_compare($_SERVER['SERVER_NAME'], '.dev',-4,4,TRUE)===0 || substr_compare($_SERVER['SERVER_NAME'], '.local',-6,6,TRUE)===0) { // Vagrant dev/test-Server ? e6ffe6
 	$GLOBALS['cfg']['MainBackground']           = '#e6ffe6';
 } elseif (substr_compare($_SERVER['SERVER_NAME'], 'orga.cpl-web.de',-15,15,TRUE)===0) { // Orga ???
