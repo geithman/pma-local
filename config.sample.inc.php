@@ -152,3 +152,23 @@ $cfg['SaveDir'] = '';
  * You can find more configuration options in the documentation
  * in the doc/ folder or at <https://docs.phpmyadmin.net/>.
  */
+
+
+
+$cfg['NavigationTreeDisplayItemFilterMinimum'] = 9999;          // Disable Filters in Navigation tree
+$cfg['NavigationTreeDefaultTabTable2']         = "search";      // Zweites Icon ermöglicht Suche
+$cfg['ShowDbStructureCreation']                = 1;             // Anzeige in Tabellenübersicht
+$cfg['ShowDbStructureLastUpdate']              = 1;             // Anzeige in Tabellenübersicht
+$cfg['ShowDbStructureLastCheck']               = 1;             // Anzeige in Tabellenübersicht
+$cfg['ProtectBinary']                          = 'noblob';      // Disable edit of binary, but enable blob
+$cfg['GZipDump']                               = 1;             // Default gzip dumps
+$cfg['NavigationTreeEnableGrouping']           = false;         // Disable navigation tree grouping
+$cfg['ShowDatabasesNavigationAsTree']          = false;			// Use database dropdown instead of tree view
+
+$cfg['MaxRows']                     = 50;
+$cfg['LoginCookieValidity']         = 14400;
+$cfg['MaxCharactersInDisplayedSQL'] = 4000;
+$cfg['RetainQueryBox']              = 1;
+$cfg['FirstLevelNavigationItems']   = 400;
+$cfg['MaxNavigationItems']          = 400;
+
