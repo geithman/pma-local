@@ -11,6 +11,7 @@ services:
   - mysql
 
 php:
+  - "7.3"
   - "7.2"
   - "7.1"
   - "7.0"
@@ -18,6 +19,9 @@ php:
   - "5.5"
   - "hhvm-3.12"
   - "hhvm-3.18"
+  - "hhvm-3.21"
+  - "hhvm-3.24"
+  - "hhvm-3.27"
   - "nightly"
 
 sudo: required
@@ -74,11 +78,9 @@ matrix:
       env: CI_MODE=test
       before_install:
         - brew update
-        - brew install gettext php72 mariadb
+        - brew install openldap libiconv php@7.2 composer mariadb
         - brew link --force gettext
         - sed -i -e 's/^memory_limit = .*/memory_limit = -1/' /usr/local/etc/php/7.2/php.ini
-        - curl https://getcomposer.org/installer | php
-        - ln -s "`pwd`/composer.phar" /usr/local/bin/composer
         - mysql.server start
 
   allow_failures:
