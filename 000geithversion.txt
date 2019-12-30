@@ -1,0 +1,24 @@
+#  config.inc.php
+
+$cfg['NavigationTreeDisplayItemFilterMinimum'] = 20;                                 // Disable Filters in Navigation tree
+$cfg['NavigationTreeDefaultTabTable2']         = "search";                             // Zweites Icon ermöglicht Suche
+$cfg['ShowDbStructureCreation']                = 1;                                    // Anzeige in Tabellenübersicht
+$cfg['ShowDbStructureLastUpdate']              = 1;                                    // Anzeige in Tabellenübersicht
+$cfg['ShowDbStructureLastCheck']               = 1;                                    // Anzeige in Tabellenübersicht
+$cfg['ProtectBinary']                          = 'noblob';                             // Disable edit of binary, but enable blob
+$cfg['GZipDump']                               = 1;                                    // Default gzip dumps
+$cfg['NavigationTreeEnableGrouping']           = false;                                // Disable navigation tree grouping
+$cfg['ShowDatabasesNavigationAsTree']          = false;   // Use database dropdown instead of tree view
+
+$cfg['lang'] = 'de';
+$cfg['Console']['Mode'] = 'collapse';
+$cfg['TableNavigationLinksMode']    = 'icons';
+$cfg['ActionLinksMode']             = 'icons';
+$cfg['MaxTableList']                = 300;
+$cfg['MaxRows']                     = 50;
+$cfg['LoginCookieValidity']         = 28800;
+$cfg['MaxCharactersInDisplayedSQL'] = 4000;
+$cfg['RetainQueryBox']              = 1;
+$cfg['FirstLevelNavigationItems']   = 400;
+$cfg['MaxNavigationItems']          = 400;
+$cfg['NavigationTreeShowFunctions'] = false;
