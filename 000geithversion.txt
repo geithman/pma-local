@@ -16,9 +16,11 @@ $cfg['TableNavigationLinksMode']    = 'icons';
 $cfg['ActionLinksMode']             = 'icons';
 $cfg['MaxTableList']                = 300;
 $cfg['MaxRows']                     = 50;
-$cfg['LoginCookieValidity']         = 28800;
+$cfg['LoginCookieValidity']         = 43200;
 $cfg['MaxCharactersInDisplayedSQL'] = 4000;
 $cfg['RetainQueryBox']              = 1;
 $cfg['FirstLevelNavigationItems']   = 400;
 $cfg['MaxNavigationItems']          = 400;
 $cfg['NavigationTreeShowFunctions'] = false;
+
+$cfg['blowfish_secret'] = 'qtdRoGmbc9{8IZr323xYcSN]0s)r$9b_JUnb{~Xz';
