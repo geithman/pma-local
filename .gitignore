@@ -56,4 +56,3 @@ composer.lock
 /vendor/
 # NPM
 /node_modules/
-phpstan.neon

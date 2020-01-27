@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-test
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Tests\Plugins\Auth;
 
 use PhpMyAdmin\Config;
@@ -15,10 +13,9 @@ use PhpMyAdmin\Footer;
 use PhpMyAdmin\Header;
 use PhpMyAdmin\Plugins\Auth\AuthenticationCookie;
 use PhpMyAdmin\Tests\PmaTestCase;
-use ReflectionException;
 use ReflectionMethod;
 
-require_once ROOT_PATH . 'libraries/config.default.php';
+require_once 'libraries/config.default.php';
 
 /**
  * tests for PhpMyAdmin\Plugins\Auth\AuthenticationCookie class
@@ -37,7 +34,7 @@ class AuthenticationCookieTest extends PmaTestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    function setUp()
     {
         $GLOBALS['PMA_Config'] = new Config();
         $GLOBALS['PMA_Config']->enableBc();
@@ -48,7 +45,6 @@ class AuthenticationCookieTest extends PmaTestCase
         $_POST['pma_password'] = '';
         $this->object = new AuthenticationCookie();
         $GLOBALS['PMA_PHP_SELF'] = '/phpmyadmin/';
-        $GLOBALS['cfg']['Server']['DisableIS'] = false;
     }
 
     /**
@@ -56,7 +52,7 @@ class AuthenticationCookieTest extends PmaTestCase
      *
      * @return void
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         parent::tearDown();
         unset($this->object);
@@ -94,9 +90,6 @@ class AuthenticationCookieTest extends PmaTestCase
         );
     }
 
-    /**
-     * @return void
-     */
     private function getAuthErrorMockResponse()
     {
         $mockResponse = $this->mockResponse();
@@ -109,7 +102,7 @@ class AuthenticationCookieTest extends PmaTestCase
         // mock footer
         $mockFooter = $this->getMockBuilder('PhpMyAdmin\Footer')
             ->disableOriginalConstructor()
-            ->setMethods(['setMinimal'])
+            ->setMethods(array('setMinimal'))
             ->getMock();
 
         $mockFooter->expects($this->once())
@@ -121,12 +114,12 @@ class AuthenticationCookieTest extends PmaTestCase
         $mockHeader = $this->getMockBuilder('PhpMyAdmin\Header')
             ->disableOriginalConstructor()
             ->setMethods(
-                [
+                array(
                     'setBodyId',
                     'setTitle',
                     'disableMenuAndConsole',
-                    'disableWarnings',
-                ]
+                    'disableWarnings'
+                )
             )
             ->getMock();
 
@@ -159,16 +152,13 @@ class AuthenticationCookieTest extends PmaTestCase
             ->will($this->returnValue($mockHeader));
 
         $GLOBALS['pmaThemeImage'] = 'test';
-        $GLOBALS['cfg']['Servers'] = [
-            1,
-            2,
-        ];
+        $GLOBALS['cfg']['Servers'] = array(1, 2);
 
         // mock error handler
 
         $mockErrorHandler = $this->getMockBuilder('PhpMyAdmin\ErrorHandler')
             ->disableOriginalConstructor()
-            ->setMethods(['hasDisplayErrors', 'dispErrors'])
+            ->setMethods(array('hasDisplayErrors', 'dispErrors'))
             ->getMock();
 
         $mockErrorHandler->expects($this->once())
@@ -214,59 +204,59 @@ class AuthenticationCookieTest extends PmaTestCase
 
         // assertions
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             ' id="imLogo"',
             $result
         );
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             '<div class="error">',
             $result
         );
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             '<form method="post" id="login_form" action="index.php" name="login_form" ' .
-            'class="disableAjax hide login js-show">',
+            'class="disableAjax login hide js-show">',
             $result
         );
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             '<input type="text" name="pma_servername" id="input_servername" ' .
             'value="localhost"',
             $result
         );
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             '<input type="text" name="pma_username" id="input_username" ' .
-            'value="pmauser" size="24" class="textfield">',
+            'value="pmauser" size="24" class="textfield"/>',
             $result
         );
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             '<input type="password" name="pma_password" id="input_password" ' .
-            'value="" size="24" class="textfield">',
+            'value="" size="24" class="textfield" />',
             $result
         );
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             '<select name="server" id="select_server" ' .
             'onchange="document.forms[\'login_form\'].' .
             'elements[\'pma_servername\'].value = \'\'" >',
             $result
         );
 
-        $this->assertStringContainsString(
-            '<input type="hidden" name="target" value="testTarget">',
+        $this->assertContains(
+            '<input type="hidden" name="target" value="testTarget" />',
             $result
         );
 
-        $this->assertStringContainsString(
-            '<input type="hidden" name="db" value="testDb">',
+        $this->assertContains(
+            '<input type="hidden" name="db" value="testDb" />',
             $result
         );
 
-        $this->assertStringContainsString(
-            '<input type="hidden" name="table" value="testTable">',
+        $this->assertContains(
+            '<input type="hidden" name="table" value="testTable" />',
             $result
         );
     }
@@ -302,12 +292,12 @@ class AuthenticationCookieTest extends PmaTestCase
         $GLOBALS['pmaThemeImage'] = 'test';
         $GLOBALS['cfg']['Lang'] = '';
         $GLOBALS['cfg']['AllowArbitraryServer'] = false;
-        $GLOBALS['cfg']['Servers'] = [1];
+        $GLOBALS['cfg']['Servers'] = array(1);
         $GLOBALS['cfg']['CaptchaLoginPrivateKey'] = 'testprivkey';
         $GLOBALS['cfg']['CaptchaLoginPublicKey'] = 'testpubkey';
         $GLOBALS['server'] = 0;
 
-        $GLOBALS['error_handler'] = new ErrorHandler();
+        $GLOBALS['error_handler'] = new ErrorHandler;
 
         ob_start();
         $this->object->showLoginForm();
@@ -315,38 +305,38 @@ class AuthenticationCookieTest extends PmaTestCase
 
         // assertions
 
-        $this->assertStringContainsString('id="imLogo"', $result);
+        $this->assertContains('id="imLogo"', $result);
 
         // Check for language selection if locales are there
         $loc = LOCALE_PATH . '/cs/LC_MESSAGES/phpmyadmin.mo';
         if (is_readable($loc)) {
-            $this->assertStringContainsString(
+            $this->assertContains(
                 '<select name="lang" class="autosubmit" lang="en" dir="ltr" ' .
                 'id="sel-lang">',
                 $result
             );
         }
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             '<form method="post" id="login_form" action="index.php" name="login_form" ' .
-            'autocomplete="off" class="disableAjax hide login js-show">',
+            'autocomplete="off" class="disableAjax login hide js-show">',
             $result
         );
 
-        $this->assertStringContainsString(
-            '<input type="hidden" name="server" value="0">',
+        $this->assertContains(
+            '<input type="hidden" name="server" value="0" />',
             $result
         );
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             '<script src="https://www.google.com/recaptcha/api.js?hl=en"'
             . ' async defer></script>',
             $result
         );
 
-        $this->assertStringContainsString(
-            '<input class="btn btn-primary g-recaptcha" data-sitekey="testpubkey"'
-            . ' data-callback="Functions_recaptchaCallback" value="Go" type="submit" id="input_go">',
+        $this->assertContains(
+            '<input class="g-recaptcha" data-sitekey="testpubkey"'
+            . ' data-callback="recaptchaCallback" value="Go" type="submit" id="input_go" />',
             $result
         );
     }
@@ -359,7 +349,7 @@ class AuthenticationCookieTest extends PmaTestCase
     public function testAuthHeader()
     {
         $GLOBALS['cfg']['LoginCookieDeleteAll'] = false;
-        $GLOBALS['cfg']['Servers'] = [1];
+        $GLOBALS['cfg']['Servers'] = array(1);
 
         $this->mockResponse('Location: https://example.com/logout');
 
@@ -378,11 +368,7 @@ class AuthenticationCookieTest extends PmaTestCase
     {
         $GLOBALS['PMA_Config']->set('is_https', false);
         $GLOBALS['cfg']['LoginCookieDeleteAll'] = false;
-        $GLOBALS['cfg']['Servers'] = [
-            1,
-            2,
-            3,
-        ];
+        $GLOBALS['cfg']['Servers'] = array(1, 2, 3);
         $GLOBALS['cfg']['Server']['LogoutURL'] = 'https://example.com/logout';
         $GLOBALS['cfg']['Server']['auth_type'] = 'cookie';
 
@@ -429,7 +415,7 @@ class AuthenticationCookieTest extends PmaTestCase
         $GLOBALS['cfg']['LoginCookieDeleteAll'] = true;
         $GLOBALS['PMA_Config']->set('PmaAbsoluteUri', '');
         $GLOBALS['PMA_Config']->set('is_https', false);
-        $GLOBALS['cfg']['Servers'] = [1];
+        $GLOBALS['cfg']['Servers'] = array(1);
 
         $_COOKIE['pmaAuth-0'] = 'test';
 
@@ -455,9 +441,9 @@ class AuthenticationCookieTest extends PmaTestCase
         $GLOBALS['cfg']['LoginCookieDeleteAll'] = false;
         $GLOBALS['PMA_Config']->set('PmaAbsoluteUri', '');
         $GLOBALS['PMA_Config']->set('is_https', false);
-        $GLOBALS['cfg']['Servers'] = [1];
+        $GLOBALS['cfg']['Servers'] = array(1);
         $GLOBALS['server'] = 1;
-        $GLOBALS['cfg']['Server'] = ['auth_type' => 'cookie'];
+        $GLOBALS['cfg']['Server'] = array('auth_type' => 'cookie');
 
         $_COOKIE['pmaAuth-1'] = 'test';
 
@@ -572,7 +558,7 @@ class AuthenticationCookieTest extends PmaTestCase
         // mock for blowfish function
         $this->object = $this->getMockBuilder('PhpMyAdmin\Plugins\Auth\AuthenticationCookie')
             ->disableOriginalConstructor()
-            ->setMethods(['cookieDecrypt'])
+            ->setMethods(array('cookieDecrypt'))
             ->getMock();
 
         $this->object->expects($this->once())
@@ -613,7 +599,7 @@ class AuthenticationCookieTest extends PmaTestCase
         // mock for blowfish function
         $this->object = $this->getMockBuilder('PhpMyAdmin\Plugins\Auth\AuthenticationCookie')
             ->disableOriginalConstructor()
-            ->setMethods(['cookieDecrypt'])
+            ->setMethods(array('cookieDecrypt'))
             ->getMock();
 
         $this->object->expects($this->at(1))
@@ -632,6 +618,7 @@ class AuthenticationCookieTest extends PmaTestCase
             '',
             $this->object->password
         );
+
     }
 
     /**
@@ -658,7 +645,7 @@ class AuthenticationCookieTest extends PmaTestCase
         // mock for blowfish function
         $this->object = $this->getMockBuilder('PhpMyAdmin\Plugins\Auth\AuthenticationCookie')
             ->disableOriginalConstructor()
-            ->setMethods(['showFailure', 'cookieDecrypt'])
+            ->setMethods(array('showFailure', 'cookieDecrypt'))
             ->getMock();
 
         $this->object->expects($this->once())
@@ -681,13 +668,13 @@ class AuthenticationCookieTest extends PmaTestCase
     public function testAuthSetUser()
     {
         $this->object->user = 'pmaUser2';
-        $arr = [
+        $arr = array(
             'host' => 'a',
             'port' => 1,
             'socket' => true,
             'ssl' => true,
-            'user' => 'pmaUser2',
-        ];
+            'user' => 'pmaUser2'
+        );
 
         $GLOBALS['cfg']['Server'] = $arr;
         $GLOBALS['cfg']['Server']['user'] = 'pmaUser';
@@ -721,6 +708,7 @@ class AuthenticationCookieTest extends PmaTestCase
             $arr,
             $GLOBALS['cfg']['Server']
         );
+
     }
 
     /**
@@ -731,13 +719,13 @@ class AuthenticationCookieTest extends PmaTestCase
     public function testAuthSetUserWithHeaders()
     {
         $this->object->user = 'pmaUser2';
-        $arr = [
+        $arr = array(
             'host' => 'a',
             'port' => 1,
             'socket' => true,
             'ssl' => true,
-            'user' => 'pmaUser2',
-        ];
+            'user' => 'pmaUser2'
+        );
 
         $GLOBALS['cfg']['Server'] = $arr;
         $GLOBALS['cfg']['Server']['host'] = 'b';
@@ -767,15 +755,15 @@ class AuthenticationCookieTest extends PmaTestCase
     {
         $this->object = $this->getMockBuilder('PhpMyAdmin\Plugins\Auth\AuthenticationCookie')
             ->disableOriginalConstructor()
-            ->setMethods(['showLoginForm'])
+            ->setMethods(array('showLoginForm'))
             ->getMock();
 
         $GLOBALS['server'] = 2;
         $_COOKIE['pmaAuth-2'] = 'pass';
 
         $this->mockResponse(
-            ['Cache-Control: no-store, no-cache, must-revalidate'],
-            ['Pragma: no-cache']
+            array('Cache-Control: no-store, no-cache, must-revalidate'),
+            array('Pragma: no-cache')
         );
         $this->object->showFailure('empty-denied');
 
@@ -784,24 +772,22 @@ class AuthenticationCookieTest extends PmaTestCase
             'Login without a password is forbidden by configuration'
             . ' (see AllowNoPassword)'
         );
+
     }
 
-    /**
-     * @return void
-     */
     public function testAuthFailsDeny()
     {
         $this->object = $this->getMockBuilder('PhpMyAdmin\Plugins\Auth\AuthenticationCookie')
             ->disableOriginalConstructor()
-            ->setMethods(['showLoginForm'])
+            ->setMethods(array('showLoginForm'))
             ->getMock();
 
         $GLOBALS['server'] = 2;
         $_COOKIE['pmaAuth-2'] = 'pass';
 
         $this->mockResponse(
-            ['Cache-Control: no-store, no-cache, must-revalidate'],
-            ['Pragma: no-cache']
+            array('Cache-Control: no-store, no-cache, must-revalidate'),
+            array('Pragma: no-cache')
         );
         $this->object->showFailure('allow-denied');
 
@@ -811,14 +797,11 @@ class AuthenticationCookieTest extends PmaTestCase
         );
     }
 
-    /**
-     * @return void
-     */
     public function testAuthFailsActivity()
     {
         $this->object = $this->getMockBuilder('PhpMyAdmin\Plugins\Auth\AuthenticationCookie')
             ->disableOriginalConstructor()
-            ->setMethods(['showLoginForm'])
+            ->setMethods(array('showLoginForm'))
             ->getMock();
 
         $GLOBALS['server'] = 2;
@@ -828,8 +811,8 @@ class AuthenticationCookieTest extends PmaTestCase
         $GLOBALS['cfg']['LoginCookieValidity'] = 10;
 
         $this->mockResponse(
-            ['Cache-Control: no-store, no-cache, must-revalidate'],
-            ['Pragma: no-cache']
+            array('Cache-Control: no-store, no-cache, must-revalidate'),
+            array('Pragma: no-cache')
         );
         $this->object->showFailure('no-activity');
 
@@ -839,14 +822,11 @@ class AuthenticationCookieTest extends PmaTestCase
         );
     }
 
-    /**
-     * @return void
-     */
     public function testAuthFailsDBI()
     {
         $this->object = $this->getMockBuilder('PhpMyAdmin\Plugins\Auth\AuthenticationCookie')
             ->disableOriginalConstructor()
-            ->setMethods(['showLoginForm'])
+            ->setMethods(array('showLoginForm'))
             ->getMock();
 
         $GLOBALS['server'] = 2;
@@ -864,8 +844,8 @@ class AuthenticationCookieTest extends PmaTestCase
         $GLOBALS['errno'] = 42;
 
         $this->mockResponse(
-            ['Cache-Control: no-store, no-cache, must-revalidate'],
-            ['Pragma: no-cache']
+            array('Cache-Control: no-store, no-cache, must-revalidate'),
+            array('Pragma: no-cache')
         );
         $this->object->showFailure('');
 
@@ -875,14 +855,11 @@ class AuthenticationCookieTest extends PmaTestCase
         );
     }
 
-    /**
-     * @return void
-     */
     public function testAuthFailsErrno()
     {
         $this->object = $this->getMockBuilder('PhpMyAdmin\Plugins\Auth\AuthenticationCookie')
             ->disableOriginalConstructor()
-            ->setMethods(['showLoginForm'])
+            ->setMethods(array('showLoginForm'))
             ->getMock();
 
         $dbi = $this->getMockBuilder('PhpMyAdmin\DatabaseInterface')
@@ -900,8 +877,8 @@ class AuthenticationCookieTest extends PmaTestCase
         unset($GLOBALS['errno']);
 
         $this->mockResponse(
-            ['Cache-Control: no-store, no-cache, must-revalidate'],
-            ['Pragma: no-cache']
+            array('Cache-Control: no-store, no-cache, must-revalidate'),
+            array('Pragma: no-cache')
         );
         $this->object->showFailure('');
 
@@ -1018,19 +995,6 @@ class AuthenticationCookieTest extends PmaTestCase
                 'sec321'
             )
         );
-        $this->assertEquals(
-            'root',
-            $this->object->cookieDecrypt(
-                '{"iv":"AclJhCM7ryNiuPnw3Y8cXg==","mac":"d0ef75e852bc162e81496e116dc571182cb2cba6","payload":"O4vrt9R1xyzAw7ypvrLmQA=="}',
-                ':Kb1?)c(r{]-{`HW*hOzuufloK(M~!p'
-            )
-        );
-        $this->assertFalse(
-            $this->object->cookieDecrypt(
-                '{"iv":"AclJhCM7ryNiuPnw3Y8cXg==","mac":"d0ef75e852bc162e81496e116dc571182cb2cba6","payload":"O4vrt9R1xyzAw7ypvrLmQA=="}',
-                'aedzoiefpzf,zf1z7ef6ef84'
-            )
-        );
     }
 
     /**
@@ -1078,15 +1042,11 @@ class AuthenticationCookieTest extends PmaTestCase
     /**
      * Test for secret splitting using getAESSecret
      *
-     * @param string $secret secret
-     * @param string $mac    mac
-     * @param string $aes    aes
-     *
      * @return void
      *
      * @dataProvider secretsProvider
      */
-    public function testMACSecretSplit($secret, $mac, $aes): void
+    public function testMACSecretSplit($secret, $mac, $aes)
     {
         $this->assertEquals(
             $mac,
@@ -1097,15 +1057,11 @@ class AuthenticationCookieTest extends PmaTestCase
     /**
      * Test for secret splitting using getMACSecret and getAESSecret
      *
-     * @param string $secret secret
-     * @param string $mac    mac
-     * @param string $aes    aes
-     *
      * @return void
      *
      * @dataProvider secretsProvider
      */
-    public function testAESSecretSplit($secret, $mac, $aes): void
+    public function testAESSecretSplit($secret, $mac, $aes)
     {
         $this->assertEquals(
             $aes,
@@ -1113,11 +1069,6 @@ class AuthenticationCookieTest extends PmaTestCase
         );
     }
 
-    /**
-     * @throws ReflectionException
-     *
-     * @return void
-     */
     public function testPasswordChange()
     {
         $newPassword = 'PMAPASSWD2';
@@ -1129,10 +1080,10 @@ class AuthenticationCookieTest extends PmaTestCase
 
         $this->object->handlePasswordChange($newPassword);
 
-        $payload = [
+        $payload = array(
             'password' => $newPassword,
-            'server' => 'b 2',
-        ];
+            'server' => 'b 2'
+        );
         $method = new ReflectionMethod(
             'PhpMyAdmin\Plugins\Auth\AuthenticationCookie',
             '_getSessionEncryptionSecret'
@@ -1140,9 +1091,9 @@ class AuthenticationCookieTest extends PmaTestCase
         $method->setAccessible(true);
 
         $encryptedCookie = $this->object->cookieEncrypt(
-            json_encode($payload),
-            $method->invoke($this->object, null)
-        );
+                                json_encode($payload),
+                                $method->invoke($this->object, null)
+                            );
         $this->assertEquals(
             $_COOKIE['pmaAuth-' . $GLOBALS['server']],
             $encryptedCookie
@@ -1155,38 +1106,38 @@ class AuthenticationCookieTest extends PmaTestCase
      */
     public function secretsProvider()
     {
-        return [
+        return array(
             // Optimal case
-            [
+            array(
                 '1234567890123456abcdefghijklmnop',
                 '1234567890123456',
                 'abcdefghijklmnop',
-            ],
+            ),
             // Overlapping secret
-            [
+            array(
                 '12345678901234567',
                 '1234567890123456',
                 '2345678901234567',
-            ],
+            ),
             // Short secret
-            [
+            array(
                 '1234567890123456',
                 '1234567890123451',
                 '2345678901234562',
-            ],
+            ),
             // Really short secret
-            [
+            array(
                 '12',
                 '1111111111111111',
                 '2222222222222222',
-            ],
+            ),
             // Too short secret
-            [
+            array(
                 '1',
                 '1111111111111111',
                 '1111111111111111',
-            ],
-        ];
+            ),
+        );
     }
 
     /**
@@ -1223,19 +1174,11 @@ class AuthenticationCookieTest extends PmaTestCase
     /**
      * Test for PhpMyAdmin\Plugins\Auth\AuthenticationCookie::checkRules
      *
-     * @param string $user     user
-     * @param string $pass     pass
-     * @param string $ip       ip
-     * @param bool   $root     root
-     * @param bool   $nopass   nopass
-     * @param array  $rules    rules
-     * @param string $expected expected result
-     *
      * @return void
      *
      * @dataProvider checkRulesProvider
      */
-    public function testCheckRules($user, $pass, $ip, $root, $nopass, $rules, $expected): void
+    public function testCheckRules($user, $pass, $ip, $root, $nopass, $rules, $expected)
     {
         $this->object->user = $user;
         $this->object->password = $pass;
@@ -1258,142 +1201,139 @@ class AuthenticationCookieTest extends PmaTestCase
         if (empty($expected)) {
             $this->assertEquals($expected, $result);
         } else {
-            $this->assertStringContainsString($expected, $result);
+            $this->assertContains($expected, $result);
         }
     }
 
-    /**
-     * @return array
-     */
     public function checkRulesProvider()
     {
-        return [
-            'nopass-ok' => [
+        return array(
+            'nopass-ok' => array(
                 'testUser',
                 '',
                 '1.2.3.4',
                 true,
                 true,
-                [],
+                array(),
                 '',
-            ],
-            'nopass' => [
+            ),
+            'nopass' => array(
                 'testUser',
                 '',
                 '1.2.3.4',
                 true,
                 false,
-                [],
+                array(),
                 'Login without a password is forbidden',
-            ],
-            'root-ok' => [
+            ),
+            'root-ok' => array(
                 'root',
                 'root',
                 '1.2.3.4',
                 true,
                 true,
-                [],
+                array(),
                 '',
-            ],
-            'root' => [
+            ),
+            'root' => array(
                 'root',
                 'root',
                 '1.2.3.4',
                 false,
                 true,
-                [],
+                array(),
                 'Access denied!',
-            ],
-            'rules-deny-allow-ok' => [
+            ),
+            'rules-deny-allow-ok' => array(
                 'root',
                 'root',
                 '1.2.3.4',
                 true,
                 true,
-                [
+                array(
                     'order' => 'deny,allow',
-                    'rules' => [
+                    'rules' => array(
                         'allow root 1.2.3.4',
                         'deny % from all',
-                    ],
-                ],
+                    ),
+                ),
                 '',
-            ],
-            'rules-deny-allow-reject' => [
+            ),
+            'rules-deny-allow-reject' => array(
                 'user',
                 'root',
                 '1.2.3.4',
                 true,
                 true,
-                [
+                array(
                     'order' => 'deny,allow',
-                    'rules' => [
+                    'rules' => array(
                         'allow root 1.2.3.4',
                         'deny % from all',
-                    ],
-                ],
+                    ),
+                ),
                 'Access denied!',
-            ],
-            'rules-allow-deny-ok' => [
+            ),
+            'rules-allow-deny-ok' => array(
                 'root',
                 'root',
                 '1.2.3.4',
                 true,
                 true,
-                [
+                array(
                     'order' => 'allow,deny',
-                    'rules' => [
+                    'rules' => array(
                         'deny user from all',
                         'allow root 1.2.3.4',
-                    ],
-                ],
+                    ),
+                ),
                 '',
-            ],
-            'rules-allow-deny-reject' => [
+            ),
+            'rules-allow-deny-reject' => array(
                 'user',
                 'root',
                 '1.2.3.4',
                 true,
                 true,
-                [
+                array(
                     'order' => 'allow,deny',
-                    'rules' => [
+                    'rules' => array(
                         'deny user from all',
                         'allow root 1.2.3.4',
-                    ],
-                ],
+                    ),
+                ),
                 'Access denied!',
-            ],
-            'rules-explicit-ok' => [
+            ),
+            'rules-explicit-ok' => array(
                 'root',
                 'root',
                 '1.2.3.4',
                 true,
                 true,
-                [
+                array(
                     'order' => 'explicit',
-                    'rules' => [
+                    'rules' => array(
                         'deny user from all',
                         'allow root 1.2.3.4',
-                    ],
-                ],
+                    ),
+                ),
                 '',
-            ],
-            'rules-explicit-reject' => [
+            ),
+            'rules-explicit-reject' => array(
                 'user',
                 'root',
                 '1.2.3.4',
                 true,
                 true,
-                [
+                array(
                     'order' => 'explicit',
-                    'rules' => [
+                    'rules' => array(
                         'deny user from all',
                         'allow root 1.2.3.4',
-                    ],
-                ],
+                    ),
+                ),
                 'Access denied!',
-            ],
-        ];
+            ),
+        );
     }
 }

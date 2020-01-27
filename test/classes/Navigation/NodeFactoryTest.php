@@ -5,14 +5,11 @@
  *
  * @package PhpMyAdmin-test
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Tests\Navigation;
 
 use PhpMyAdmin\Navigation\NodeFactory;
 use PhpMyAdmin\Navigation\Nodes\Node;
 use PhpMyAdmin\Tests\PmaTestCase;
-use PHPUnit\Framework\Exception;
 
 /**
  * Tests for NodeFactory class
@@ -26,7 +23,7 @@ class NodeFactoryTest extends PmaTestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $GLOBALS['server'] = 0;
     }
@@ -41,7 +38,7 @@ class NodeFactoryTest extends PmaTestCase
         $node = NodeFactory::getInstance();
         $this->assertEquals('default', $node->name);
         $this->assertEquals(Node::OBJECT, $node->type);
-        $this->assertEquals(false, $node->isGroup);
+        $this->assertEquals(false, $node->is_group);
     }
 
     /**
@@ -58,7 +55,7 @@ class NodeFactoryTest extends PmaTestCase
         );
         $this->assertEquals('default', $node->name);
         $this->assertEquals(Node::CONTAINER, $node->type);
-        $this->assertEquals(false, $node->isGroup);
+        $this->assertEquals(false, $node->is_group);
     }
 
     /**
@@ -76,7 +73,7 @@ class NodeFactoryTest extends PmaTestCase
         );
         $this->assertEquals('default', $node->name);
         $this->assertEquals(Node::CONTAINER, $node->type);
-        $this->assertEquals(true, $node->isGroup);
+        $this->assertEquals(true, $node->is_group);
     }
 
     /**
@@ -86,8 +83,12 @@ class NodeFactoryTest extends PmaTestCase
      */
     public function testFileError()
     {
-        $this->expectException(Exception::class);
-        NodeFactory::getInstance('NodeDoesNotExist');
+        try {
+            NodeFactory::getInstance('NodeDoesNotExist');
+            $this->assertTrue(false);
+        } catch (\Exception $e) {
+            $this->assertTrue(true);
+        }
     }
 
     /**
@@ -97,7 +98,11 @@ class NodeFactoryTest extends PmaTestCase
      */
     public function testClassNameError()
     {
-        $this->expectException(Exception::class);
-        NodeFactory::getInstance('Invalid');
+        try {
+            NodeFactory::getInstance('Invalid');
+            $this->assertTrue(false);
+        } catch (\Exception $e) {
+            $this->assertTrue(true);
+        }
     }
 }

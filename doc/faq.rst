@@ -167,14 +167,14 @@ to the latest version to take advantage of the new import features.
 
 The first things to check (or ask your host provider to check) are the values
 of ``max_execution_time``, ``upload_max_filesize``, ``memory_limit`` and
-``post_max_size`` in the :file:`php.ini` configuration file. All of these
+``post_max_size`` in the :file:`php.ini` configuration file. All of these three
 settings limit the maximum size of data that can be submitted and handled by
 PHP. Please note that ``post_max_size`` needs to be larger than
 ``upload_max_filesize``. There exist several workarounds if your upload is too
 big or your hosting provider is unwilling to change the settings:
 
 * Look at the :config:option:`$cfg['UploadDir']` feature. This allows one to upload a file to the server
-  via scp, FTP, or your favorite file transfer method. PhpMyAdmin is
+  via scp, ftp, or your favorite file transfer method. PhpMyAdmin is
   then able to import the files from the temporary directory. More
   information is available in the :ref:`config`  of this document.
 * Using a utility (such as `BigDump
@@ -433,9 +433,7 @@ releases.
 PHP 7 is supported since phpMyAdmin 4.6, PHP 7.1 is supported since 4.6.5,
 PHP 7.2 is supported since 4.7.4.
 
-HHVM is supported up to phpMyAdmin 4.8.
-
-Since release 5.0, phpMyAdmin supports only PHP 7.1 and newer.
+phpMyAdmin also works fine with HHVM.
 
 .. _faq1_32:
 
@@ -463,22 +461,20 @@ Yes. This procedure was tested with phpMyAdmin 2.6.1, PHP 4.3.9 in
 
 .. _faq1_34:
 
-1.34 Can I directly access a database or table pages?
------------------------------------------------------
+1.34 Can I access directly to database or table pages?
+------------------------------------------------------
 
-Yes. Out of the box, you can use a :term:`URL` like
+Yes. Out of the box, you can use :term:`URL` like
 ``http://server/phpMyAdmin/index.php?server=X&db=database&table=table&target=script``.
-For ``server`` you can use the server number
-which refers to the numeric host index (from ``$i``) in
-:file:`config.inc.php`. The table and script parts are optional.
-
-If you want a URL like
-``http://server/phpMyAdmin/database[/table][/script]``, you need to do some additional configuration. The following
-lines apply only for the `Apache <https://httpd.apache.org>`_ web server.
-First, make sure that you have enabled some features within the Apache global
+For ``server`` you use the server number
+which refers to the order of the server paragraph in
+:file:`config.inc.php`. Table and script parts are optional. If you want
+``http://server/phpMyAdmin/database[/table][/script]`` :term:`URL`, you need to do some configuration. Following
+lines apply only for `Apache <https://httpd.apache.org>`_ web server.
+First make sure, that you have enabled some features within global
 configuration. You need ``Options SymLinksIfOwnerMatch`` and ``AllowOverride
 FileInfo`` enabled for directory where phpMyAdmin is installed and you
-need mod\_rewrite to be enabled. Then you just need to create the
+need mod\_rewrite to be enabled. Then you just need to create
 following :term:`.htaccess` file in root folder of phpMyAdmin installation (don't
 forget to change directory name inside of it):
 
@@ -490,8 +486,6 @@ forget to change directory name inside of it):
     RewriteRule ^([a-zA-Z0-9_]+)/([a-z_]+\.php)$ index.php?db=$1&target=$2 [R]
     RewriteRule ^([a-zA-Z0-9_]+)/([a-zA-Z0-9_]+)$ index.php?db=$1&table=$2 [R]
     RewriteRule ^([a-zA-Z0-9_]+)$ index.php?db=$1 [R]
-
-.. seealso:: :ref:`faq4_8`
 
 .. _faq1_35:
 
@@ -691,30 +685,6 @@ A list of files and corresponding functionality which degrade gracefully when re
 * :file:`./examples/`
 * :file:`./sql/` (SQL scripts to configure advanced functionality)
 * :file:`./js/vendor/openlayers/` (GIS visualization)
-
-.. _faq1_45:
-
-1.45 I get an error message about unknown authentication method caching_sha2_password when trying to log in
------------------------------------------------------------------------------------------------------------
-
-When logging in using MySQL version 8 or newer, you may encounter an error message like this:
-
-    mysqli_real_connect(): The server requested authentication method unknown to the client [caching_sha2_password]
-
-    mysqli_real_connect(): (HY000/2054): The server requested authentication method unknown to the client
-
-This error is because of a version compatibility problem between PHP and MySQL. The MySQL project introduced a new authentication
-method (our tests show this began with version 8.0.11) however PHP did not include the ability to use that authentication method.
-PHP reports that this was fixed in PHP version 7.4.
-
-Users experiencing this are encouraged to upgrade their PHP installation, however a workaround exists. Your MySQL user account
-can be set to use the older authentication with a command such as
-
-.. code-block:: mysql
-
-  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PASSWORD';
-
-.. seealso:: <https://github.com/phpmyadmin/phpmyadmin/issues/14220>, <https://stackoverflow.com/questions/49948350/phpmyadmin-on-mysql-8-0>, <https://bugs.php.net/bug.php?id=76243>
 
 .. _faqconfig:
 
@@ -1205,8 +1175,6 @@ or one of the host names present in the configuration file.
 For example, to jump directly to a particular database, a URL can be constructed as
 ``https://example.com/phpmyadmin/?db=sakila``.
 
-.. seealso:: :ref:`faq1_34`
-
 .. versionchanged:: 4.9.0
 
     Support for using the ``pma_username`` and ``pma_password`` parameters was removed
@@ -1647,7 +1615,7 @@ It means "average".
   any) will be included in backup.
 * "Enclose table and column names with backquotes" ensures that column
   and table names formed with special characters are protected.
-* "Add into comments" includes column comments, relations, and media (MIME)
+* "Add into comments" includes column comments, relations, and MIME
   types set in the pmadb in the dump as :term:`SQL` comments
   (*/\* xxx \*/*).
 

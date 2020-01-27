@@ -4,8 +4,6 @@
  *
  * @package PhpMyAdmin-test
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Tests\Plugins\Schema;
 
 use PhpMyAdmin\Plugins\Schema\Svg\SvgRelationSchema;
@@ -31,34 +29,34 @@ class SvgRelationSchemaTest extends PmaTestCase
      * @access protected
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $_REQUEST['page_number'] = 33;
         $_REQUEST['svg_show_color'] = true;
         $_REQUEST['svg_show_keys'] = true;
         $_REQUEST['svg_show_table_dimension'] = true;
         $_REQUEST['svg_all_tables_same_width'] = true;
-        $_REQUEST['t_h'] = ['information_schema.files' => 1];
-        $_REQUEST['t_x'] = ['information_schema.files' => 0];
-        $_REQUEST['t_y'] = ['information_schema.files' => 0];
-        $_POST['t_db'] = ['information_schema'];
-        $_POST['t_tbl'] = ['files'];
+        $_REQUEST['t_h'] = array('information_schema.files' => 1);
+        $_REQUEST['t_x'] = array('information_schema.files' => 0);
+        $_REQUEST['t_y'] = array('information_schema.files' => 0);
+        $_POST['t_db'] = array('information_schema');
+        $_POST['t_tbl'] = array('files');
 
         $GLOBALS['server'] = 1;
         $GLOBALS['db'] = 'information_schema';
         $GLOBALS['cfg']['Server']['table_coords'] = "table_name";
 
         //_SESSION
-        $_SESSION['relation'][$GLOBALS['server']] = [
+        $_SESSION['relation'][$GLOBALS['server']] = array(
             'PMA_VERSION' => PMA_VERSION,
             'table_coords' => "table_name",
             'displaywork' => 'displaywork',
             'db' => "information_schema",
             'table_info' => 'table_info',
             'relwork' => 'relwork',
-            'relation' => 'relation',
-        ];
-        $relation = new Relation($GLOBALS['dbi']);
+            'relation' => 'relation'
+        );
+        $relation = new Relation();
         $relation->getRelationsParam();
 
         $dbi = $this->getMockBuilder('PhpMyAdmin\DatabaseInterface')
@@ -77,15 +75,15 @@ class SvgRelationSchemaTest extends PmaTestCase
             ->method('tryQuery')
             ->will($this->returnValue("executed_1"));
 
-        $fetchArrayReturn = [
+        $fetchArrayReturn = array(
             //table name in information_schema_relations
-            'table_name' => 'CHARACTER_SETS',
-        ];
+            'table_name' => 'CHARACTER_SETS'
+        );
 
-        $fetchArrayReturn2 = [
+        $fetchArrayReturn2 = array(
             //table name in information_schema_relations
-            'table_name' => 'COLLATIONS',
-        ];
+            'table_name' => 'COLLATIONS'
+        );
 
         $dbi->expects($this->at(2))
             ->method('fetchAssoc')
@@ -97,15 +95,15 @@ class SvgRelationSchemaTest extends PmaTestCase
             ->method('fetchAssoc')
             ->will($this->returnValue(false));
 
-        $getIndexesResult = [
-            [
+        $getIndexesResult = array(
+            array(
                 'Table' => 'pma_tbl',
                 'Field' => 'field1',
                 'Key' => 'PRIMARY',
                 'Key_name' => "Key_name",
-                'Column_name' => "Column_name",
-            ],
-        ];
+                'Column_name' => "Column_name"
+            )
+        );
         $dbi->expects($this->any())->method('getTableIndexes')
             ->will($this->returnValue($getIndexesResult));
 
@@ -135,7 +133,7 @@ class SvgRelationSchemaTest extends PmaTestCase
      * @access protected
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         unset($this->object);
     }

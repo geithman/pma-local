@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-test
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Tests;
 
 use PhpMyAdmin\LanguageManager;
@@ -19,9 +17,6 @@ use PhpMyAdmin\Tests\PmaTestCase;
  */
 class LanguageTest extends PmaTestCase
 {
-    /**
-     * @var LanguageManager
-     */
     private $manager;
 
     /**
@@ -29,7 +24,7 @@ class LanguageTest extends PmaTestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $loc = LOCALE_PATH . '/cs/LC_MESSAGES/phpmyadmin.mo';
         if (! is_readable($loc)) {
@@ -38,10 +33,7 @@ class LanguageTest extends PmaTestCase
         $this->manager = new LanguageManager();
     }
 
-    /**
-     * @return void
-     */
-    protected function tearDown(): void
+    public function tearDown()
     {
         // Ensure we have English locale after tests
         $this->manager->getLanguage('en')->activate();
@@ -101,7 +93,7 @@ class LanguageTest extends PmaTestCase
         $this->assertGreaterThan(1, count($langs));
 
         /* Ensure we have name for every language */
-        foreach ($langs as $lang) {
+        foreach($langs as $lang) {
             $this->assertNotEquals($lang->getCode(), strtolower($lang->getEnglishName()));
         }
     }
@@ -166,7 +158,7 @@ class LanguageTest extends PmaTestCase
      *
      * @dataProvider selectDataProvider
      */
-    public function testSelect($lang, $post, $get, $cookie, $accept, $agent, $default, $expect): void
+    public function testSelect($lang, $post, $get, $cookie, $accept, $agent, $default, $expect)
     {
         $GLOBALS['PMA_Config']->set('FilterLanguages', '');
         $GLOBALS['PMA_Config']->set('Lang', $lang);
@@ -198,98 +190,21 @@ class LanguageTest extends PmaTestCase
      */
     public function selectDataProvider()
     {
-        return [
-            [
-                'cs',
-                'en',
-                '',
-                '',
-                '',
-                '',
-                '',
-                'Czech',
-            ],
-            [
-                '',
-                'cs',
-                '',
-                '',
-                '',
-                '',
-                '',
-                'Czech',
-            ],
-            [
-                '',
-                'cs',
-                'en',
-                '',
-                '',
-                '',
-                '',
-                'Czech',
-            ],
-            [
-                '',
-                '',
-                'cs',
-                '',
-                '',
-                '',
-                '',
-                'Czech',
-            ],
-            [
-                '',
-                '',
-                '',
-                'cs',
-                '',
-                '',
-                '',
-                'Czech',
-            ],
-            [
-                '',
-                '',
-                '',
-                '',
-                'cs,en-US;q=0.7,en;q=0.3',
-                '',
-                '',
-                'Czech',
-            ],
-            [
-                '',
-                '',
-                '',
-                '',
-                '',
+        return array(
+            array('cs', 'en', '', '' ,'' ,'', '', 'Czech'),
+            array('', 'cs', '', '' ,'' ,'', '', 'Czech'),
+            array('', 'cs', 'en', '' ,'' ,'', '', 'Czech'),
+            array('', '', 'cs', '' ,'' ,'', '', 'Czech'),
+            array('', '', '', 'cs' ,'' ,'', '', 'Czech'),
+            array('', '', '', '' ,'cs,en-US;q=0.7,en;q=0.3' ,'', '', 'Czech'),
+            array(
+                '', '', '', '', '',
                 'Mozilla/5.0 (Linux; U; Android 2.2.2; tr-tr; GM FOX)',
-                '',
-                'Turkish',
-            ],
-            [
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                'cs',
-                'Czech',
-            ],
-            [
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                'English',
-            ],
-        ];
+                '', 'Turkish'
+            ),
+            array('', '', '', '' ,'' ,'', 'cs', 'Czech'),
+            array('', '', '', '' ,'' ,'', '', 'English'),
+        );
     }
 
     /**
@@ -302,15 +217,15 @@ class LanguageTest extends PmaTestCase
      * @group large
      * @dataProvider listLocales
      */
-    public function testGettext($locale): void
+    public function testGettext($locale)
     {
         $GLOBALS['PMA_Config']->set('FilterLanguages', '');
         /* We should be able to set the language */
         $this->manager->getLanguage($locale)->activate();
 
         /* Grab some texts */
-        $this->assertStringContainsString('%s', _ngettext('%s table', '%s tables', 10));
-        $this->assertStringContainsString('%s', _ngettext('%s table', '%s tables', 1));
+        $this->assertContains('%s', _ngettext('%s table', '%s tables', 10));
+        $this->assertContains('%s', _ngettext('%s table', '%s tables', 1));
 
         $this->assertEquals(
             $locale,
@@ -325,9 +240,9 @@ class LanguageTest extends PmaTestCase
      */
     public function listLocales()
     {
-        $ret = [];
+        $ret = array();
         foreach (LanguageManager::getInstance()->availableLanguages() as $language) {
-            $ret[] = [$language->getCode()];
+            $ret[] = array($language->getCode());
         }
         return $ret;
     }

@@ -16,30 +16,9 @@ $cfg['TableNavigationLinksMode']    = 'icons';
 $cfg['ActionLinksMode']             = 'icons';
 $cfg['MaxTableList']                = 300;
 $cfg['MaxRows']                     = 50;
-$cfg['LoginCookieValidity']         = 43200;
+$cfg['LoginCookieValidity']         = 28800;
 $cfg['MaxCharactersInDisplayedSQL'] = 4000;
 $cfg['RetainQueryBox']              = 1;
 $cfg['FirstLevelNavigationItems']   = 400;
 $cfg['MaxNavigationItems']          = 400;
 $cfg['NavigationTreeShowFunctions'] = false;
-
-$cfg['blowfish_secret'] = 'qtdRoGmbc9{8IZr323xYcSN]0s)r$9b_JUnb{~Xz';
-
-
-/******************************************************************************************************************************
-if (@file_exists('/srv/hadata/cluster/webdata/mpoadmin/')) {  // Cluster ?? ffcce0
-	$GLOBALS['cfg']['MainBackground']           = '#ffcce0';
-} elseif (substr_compare($_SERVER['SERVER_NAME'], '.odin',-5,5,TRUE)===0) {  // Odin ??
-    $GLOBALS['cfg']['MainBackground']           = '#bafcba';
-} elseif (substr_compare($_SERVER['SERVER_NAME'], 'geithspace.de',-13,13,TRUE)===0) { // Geithspace.de ??
-	$GLOBALS['cfg']['MainBackground']           = '#f2ffcc';
-} elseif (substr_compare($_SERVER['SERVER_NAME'], '.dev',-4,4,TRUE)===0 || substr_compare($_SERVER['SERVER_NAME'], '.local',-6,6,TRUE)===0) { // Vagrant dev/test-Server ? e6ffe6
-	$GLOBALS['cfg']['MainBackground']           = '#e6ffe6';
-} elseif (substr_compare($_SERVER['SERVER_NAME'], 'orga.cpl-web.de',-15,15,TRUE)===0) { // Orga ???
-	$GLOBALS['cfg']['MainBackground']           = '#ffeecc';
-} elseif (substr_compare($_SERVER['SERVER_NAME'], 'geithwork.de',-12,12,TRUE)===0) { // Geithwork.de ???
-	$GLOBALS['cfg']['MainBackground']           = '#f2ffcc';
-} else {
-	$GLOBALS['cfg']['MainBackground']           = '#ffffff';
-}
-******************************************************************************************************************************/

@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-test
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Tests;
 
 use PhpMyAdmin\File;
@@ -24,7 +22,7 @@ class FileTest extends PmaTestCase
      *
      * @return void
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $GLOBALS['charset_conversion'] = false;
     }
@@ -38,7 +36,7 @@ class FileTest extends PmaTestCase
      * @return void
      * @dataProvider compressedFiles
      */
-    public function testMIME($file, $mime): void
+    public function testMIME($file, $mime)
     {
         $arr = new File($file);
         $this->assertEquals($mime, $arr->getCompression());
@@ -52,7 +50,7 @@ class FileTest extends PmaTestCase
      * @return void
      * @dataProvider compressedFiles
      */
-    public function testBinaryContent($file): void
+    public function testBinaryContent($file)
     {
         $data = '0x' . bin2hex(file_get_contents($file));
         $file = new File($file);
@@ -69,7 +67,7 @@ class FileTest extends PmaTestCase
      * @requires extension bz2 1
      * @requires extension zip 1
      */
-    public function testReadCompressed($file): void
+    public function testReadCompressed($file)
     {
         $file = new File($file);
         $file->setDecompressContent(true);
@@ -85,19 +83,10 @@ class FileTest extends PmaTestCase
      */
     public function compressedFiles()
     {
-        return [
-            [
-                './test/test_data/test.gz',
-                'application/gzip',
-            ],
-            [
-                './test/test_data/test.bz2',
-                'application/bzip2',
-            ],
-            [
-                './test/test_data/test.zip',
-                'application/zip',
-            ],
-        ];
+        return array(
+            array('./test/test_data/test.gz', 'application/gzip'),
+            array('./test/test_data/test.bz2', 'application/bzip2'),
+            array('./test/test_data/test.zip', 'application/zip'),
+        );
     }
 }

@@ -1,6 +1,10 @@
 /*
 !/.gitignore
 !/dot.gif
+!/svg_gradient.php
 !/original/
 !/pmahomme/
-!/metro/
+
+**/*.css
+**/*.css.map
+!**/printview.css

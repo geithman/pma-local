@@ -5,8 +5,6 @@
  *
  * @package PhpMyAdmin-test
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Tests;
 
 use PhpMyAdmin\Template;
@@ -21,21 +19,6 @@ use Twig\Error\LoaderError;
 class TemplateTest extends PmaTestCase
 {
     /**
-     * @var Template
-     */
-    protected $template;
-
-    /**
-     * Sets up the fixture.
-     *
-     * @return void
-     */
-    protected function setUp(): void
-    {
-        $this->template = new Template();
-    }
-
-    /**
      * Test for set function
      *
      * @param string $data Template name
@@ -44,14 +27,17 @@ class TemplateTest extends PmaTestCase
      *
      * @dataProvider providerTestSet
      */
-    public function testSet($data): void
+    public function testSet($data)
     {
-        $result = $this->template->render($data, [
-            'variable1' => 'value1',
-            'variable2' => 'value2',
-        ]);
-        $this->assertStringContainsString('value1', $result);
-        $this->assertStringContainsString('value2', $result);
+        $template = Template::get($data);
+        $result = $template->render(
+            array(
+                'variable1' => 'value1',
+                'variable2' => 'value2',
+            )
+        );
+        $this->assertContains('value1', $result);
+        $this->assertContains('value2', $result);
     }
 
     /**
@@ -77,11 +63,11 @@ class TemplateTest extends PmaTestCase
      *
      * @dataProvider providerTestDynamicRender
      */
-    public function testDynamicRender($templateFile, $key, $value): void
+    public function testDynamicRender($templateFile, $key, $value)
     {
         $this->assertEquals(
             $value,
-            $this->template->render($templateFile, [$key => $value])
+            Template::get($templateFile)->render([$key => $value])
         );
     }
 
@@ -93,11 +79,7 @@ class TemplateTest extends PmaTestCase
     public function providerTestDynamicRender()
     {
         return [
-            [
-                'test/echo',
-                'variable',
-                'value',
-            ],
+            ['test/echo', 'variable', 'value'],
         ];
     }
 
@@ -108,8 +90,12 @@ class TemplateTest extends PmaTestCase
      */
     public function testRenderTemplateNotFound()
     {
-        $this->expectException(LoaderError::class);
-        $this->template->render('template not found');
+        try {
+            Template::get('template not found')->render();
+            $this->assertTrue(false);
+        } catch (LoaderError $e) {
+            $this->assertTrue(true);
+        }
     }
 
     /**
@@ -122,11 +108,11 @@ class TemplateTest extends PmaTestCase
      *
      * @dataProvider providerTestRender
      */
-    public function testRender($templateFile, $expectedResult): void
+    public function testRender($templateFile, $expectedResult)
     {
         $this->assertEquals(
             $expectedResult,
-            $this->template->render($templateFile)
+            Template::get($templateFile)->render()
         );
     }
 
@@ -138,10 +124,7 @@ class TemplateTest extends PmaTestCase
     public function providerTestRender()
     {
         return [
-            [
-                'test/static',
-                'static content',
-            ],
+            ['test/static', 'static content'],
         ];
     }
 
@@ -156,11 +139,11 @@ class TemplateTest extends PmaTestCase
      *
      * @dataProvider providerTestRenderGettext
      */
-    public function testRenderGettext($templateFile, $renderParams, $expectedResult): void
+    public function testRenderGettext($templateFile, $renderParams, $expectedResult)
     {
         $this->assertEquals(
             $expectedResult,
-            $this->template->render($templateFile, $renderParams)
+            Template::get($templateFile)->render($renderParams)
         );
     }
 
@@ -172,41 +155,13 @@ class TemplateTest extends PmaTestCase
     public function providerTestRenderGettext()
     {
         return [
-            [
-                'test/gettext/gettext',
-                [],
-                'Text',
-            ],
-            [
-                'test/gettext/pgettext',
-                [],
-                'Text',
-            ],
-            [
-                'test/gettext/notes',
-                [],
-                'Text',
-            ],
-            [
-                'test/gettext/plural',
-                ['table_count' => 1],
-                'One table',
-            ],
-            [
-                'test/gettext/plural',
-                ['table_count' => 2],
-                '2 tables',
-            ],
-            [
-                'test/gettext/plural_notes',
-                ['table_count' => 1],
-                'One table',
-            ],
-            [
-                'test/gettext/plural_notes',
-                ['table_count' => 2],
-                '2 tables',
-            ],
+            ['test/gettext/gettext', [], 'Text'],
+            ['test/gettext/pgettext', [], 'Text'],
+            ['test/gettext/notes', [], 'Text'],
+            ['test/gettext/plural', ['table_count' => 1], 'One table'],
+            ['test/gettext/plural', ['table_count' => 2], '2 tables'],
+            ['test/gettext/plural_notes', ['table_count' => 1], 'One table'],
+            ['test/gettext/plural_notes', ['table_count' => 2], '2 tables'],
         ];
     }
 }

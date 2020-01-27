@@ -4,13 +4,17 @@
  *
  * @package PhpMyAdmin-test
  */
-declare(strict_types=1);
-
 namespace PhpMyAdmin\Tests\Plugins\Import;
 
 use PhpMyAdmin\File;
 use PhpMyAdmin\Plugins\Import\ImportShp;
 use PhpMyAdmin\Tests\PmaTestCase;
+
+/*
+ * we must set $GLOBALS['server'] here
+ * since 'check_user_privileges.inc.php' will use it globally
+ */
+$GLOBALS['server'] = 0;
 
 /**
  * Tests for PhpMyAdmin\Plugins\Import\ImportShp class
@@ -29,16 +33,14 @@ class ImportShpTest extends PmaTestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      *
-     * @return void
-     *
      * @access protected
+     * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
-        if (! defined('PMA_IS_WINDOWS')) {
+        if (!defined('PMA_IS_WINDOWS')) {
             define('PMA_IS_WINDOWS', false);
         }
-        $GLOBALS['server'] = 0;
         //setting
         $GLOBALS['plugin_param'] = 'table';
         $GLOBALS['finished'] = false;
@@ -85,11 +87,10 @@ class ImportShpTest extends PmaTestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      *
-     * @return void
-     *
      * @access protected
+     * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         unset($this->object);
     }
@@ -113,13 +114,14 @@ class ImportShpTest extends PmaTestCase
             $properties->getExtension()
         );
         $this->assertEquals(
-            [],
+            array(),
             $properties->getOptions()
         );
         $this->assertEquals(
             __('Options'),
             $properties->getOptionsText()
         );
+
     }
 
     /**
@@ -140,20 +142,13 @@ class ImportShpTest extends PmaTestCase
         $this->runImport('test/test_data/dresden_osm.shp.zip');
 
         $this->assertMessages($import_notice);
-
-        $endsWith = "13.737122 51.0542065)))'))";
-
-        if (extension_loaded('dbase')) {
-            $endsWith = "13.737122 51.0542065)))'),";
-        }
-
-        $this->assertStringContainsString(
+        $this->assertContains(
             "(GeomFromText('MULTIPOLYGON((("
-            . '13.737122 51.0542065,'
-            . '13.7373039 51.0541298,'
-            . '13.7372661 51.0540944,'
-            . '13.7370842 51.0541711,'
-            . $endsWith,
+            . "13.737122 51.0542065,"
+            . "13.7373039 51.0541298,"
+            . "13.7372661 51.0540944,"
+            . "13.7370842 51.0541711,"
+            . "13.737122 51.0542065)))'))",
             $sql_query
         );
     }
@@ -175,40 +170,23 @@ class ImportShpTest extends PmaTestCase
         //Test function called
         $this->runImport('test/test_data/timezone.shp.zip');
 
-        // asset that all sql are executed
-        $this->assertStringContainsString(
+        //asset that all sql are executed
+        $this->assertContains(
             'CREATE DATABASE IF NOT EXISTS `SHP_DB` DEFAULT CHARACTER '
             . 'SET utf8 COLLATE utf8_general_ci',
             $sql_query
         );
-
-        // dbase extension will generate different sql statement
-        if (extension_loaded('dbase')) {
-            $this->assertStringContainsString(
-                'CREATE TABLE IF NOT EXISTS `SHP_DB`.`TBL_NAME` '
-                . '(`SPATIAL` geometry, `ID` int(2), `AUTHORITY` varchar(25), `NAME` varchar(42)) '
-                . 'DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;',
-                $sql_query
-            );
-
-            $this->assertStringContainsString(
-                'INSERT INTO `SHP_DB`.`TBL_NAME` (`SPATIAL`, `ID`, `AUTHORITY`, `NAME`) VALUES',
-                $sql_query
-            );
-        } else {
-            $this->assertStringContainsString(
-                'CREATE TABLE IF NOT EXISTS `SHP_DB`.`TBL_NAME` (`SPATIAL` geometry)',
-                $sql_query
-            );
-
-            $this->assertStringContainsString(
-                'INSERT INTO `SHP_DB`.`TBL_NAME` (`SPATIAL`) VALUES',
-                $sql_query
-            );
-        }
-
-
-        $this->assertStringContainsString(
+        $this->assertContains(
+            'CREATE TABLE IF NOT EXISTS `SHP_DB`.`TBL_NAME` '
+            . '(`SPATIAL` geometry) DEFAULT CHARACTER '
+            . 'SET utf8 COLLATE utf8_general_ci;',
+            $sql_query
+        );
+        $this->assertContains(
+            "INSERT INTO `SHP_DB`.`TBL_NAME` (`SPATIAL`) VALUES",
+            $sql_query
+        );
+        $this->assertContains(
             "GeomFromText('POINT(1294523.1759236",
             $sql_query
         );
@@ -226,23 +204,23 @@ class ImportShpTest extends PmaTestCase
      */
     protected function assertMessages($import_notice)
     {
-        $this->assertStringContainsString(
+        $this->assertContains(
             'The following structures have either been created or altered.',
             $import_notice
         );
-        $this->assertStringContainsString(
+        $this->assertContains(
             'Go to database: `SHP_DB`',
             $import_notice
         );
-        $this->assertStringContainsString(
+        $this->assertContains(
             'Edit settings for `SHP_DB`',
             $import_notice
         );
-        $this->assertStringContainsString(
+        $this->assertContains(
             'Go to table: `TBL_NAME`',
             $import_notice
         );
-        $this->assertStringContainsString(
+        $this->assertContains(
             'Edit settings for `TBL_NAME`',
             $import_notice
         );
