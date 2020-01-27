@@ -202,15 +202,7 @@ class Menu
         }
         $item .= '%3$s</a>';
         $retval .= "<div id='floating_menubar'></div>";
-		$mysql_cur_user_and_host = $GLOBALS['dbi']->fetchValue('SELECT USER();') .
-                (isset($_SERVER['SERVERTYPE']) ? ' on Server <b>'.$_SERVER['SERVERTYPE'] .'</b>' : '');
-		if (strncmp($mysql_cur_user_and_host,'cpl_ro',4)===0 || strncmp($mysql_cur_user_and_host,'readonly',4)===0) {
-		    $retval .= "<div id='serverinfo' style='background-color:#00b000;'>";
-		} elseif (strncmp($mysql_cur_user_and_host,'root',4)===0) {
-		    $retval .= "<div id='serverinfo' style='background-color:#b00000;'>";
-		} else {
-	        $retval .= "<div id='serverinfo'>";
-		}
+        $retval .= "<div id='serverinfo'>";
         if (Util::showIcons('TabsMode')) {
             $retval .= Util::getImage(
                 's_host',
@@ -328,8 +320,7 @@ class Menu
                 }
             }
         }
-		$retval .= ' &nbsp; &nbsp; || &nbsp; <span style="color:#ffff80;">USER='.$mysql_cur_user_and_host.'</span>';
-		$retval .= '<div class="clearfloat"></div>';
+        $retval .= '<div class="clearfloat"></div>';
         $retval .= '</div>';
         return $retval;
     }
