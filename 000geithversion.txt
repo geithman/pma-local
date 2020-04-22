@@ -22,3 +22,6 @@ $cfg['RetainQueryBox']              = 1;
 $cfg['FirstLevelNavigationItems']   = 400;
 $cfg['MaxNavigationItems']          = 400;
 $cfg['NavigationTreeShowFunctions'] = false;
+
+
+
