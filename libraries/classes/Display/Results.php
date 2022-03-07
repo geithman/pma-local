@@ -3001,6 +3001,7 @@ class Results
             $_url_params = array(
                 'db'            => $this->__get('db'),
                 'table'         => $meta->orgtable,
+                'where_clause_sign' => Core::signSqlQuery($whereClauseMap[$row_no][$meta->orgtable]),
                 'where_clause'  => $whereClauseMap[$row_no][$meta->orgtable],
                 'transform_key' => $meta->orgname
             );
@@ -5163,6 +5164,8 @@ class Results
         if (count($url_params) > 0
             && (!empty($tmpdb) && !empty($meta->orgtable))
         ) {
+            $url_params['where_clause_sign'] = Core::signSqlQuery($url_params['where_clause']);
+
             $result = '<a href="tbl_get_field.php'
                 . Url::getCommon($url_params)
                 . '" class="disableAjax">'
