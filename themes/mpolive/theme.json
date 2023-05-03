@@ -1,0 +1,8 @@
+{
+    "name": "MPO-Live",
+    "version": "5.0",
+    "description": "MPO Live/Cluster phpMyAdmin theme",
+    "author": "phpMyAdmin mpolive",
+    "url": "https://www.phpmyadmin.net/",
+    "supports": ["5.0", "5.1", "5.2"]
+}

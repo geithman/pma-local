@@ -1,0 +1,8 @@
+{
+    "name": "MPO-Local/Test",
+    "version": "5.0",
+    "description": "MPO Local/Test phpMyAdmin theme",
+    "author": "phpMyAdmin mpolocal",
+    "url": "https://www.phpmyadmin.net/",
+    "supports": ["5.0", "5.1", "5.2"]
+}

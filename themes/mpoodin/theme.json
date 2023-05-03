@@ -1,0 +1,8 @@
+{
+    "name": "MPO-Odin",
+    "version": "5.0",
+    "description": "MPO-Odin phpMyAdmin theme",
+    "author": "mpoodin developers",
+    "url": "https://www.phpmyadmin.net/",
+    "supports": ["5.0", "5.1", "5.2"]
+}
