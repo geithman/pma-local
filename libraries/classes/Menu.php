@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace PhpMyAdmin;
 
+use extend\User;
 use PhpMyAdmin\ConfigStorage\Relation;
 use PhpMyAdmin\Query\Utilities;
 use PhpMyAdmin\Utils\SessionCache;
@@ -206,10 +207,15 @@ class Menu
             }
         }
 
+        $user = Array('name'=>$this->dbi->getCurrentUser());
+        // $user = User::getUserName();
+
         return $this->template->render('menu/breadcrumbs', [
             'server' => $server,
             'database' => $database,
             'table' => $table,
+            'user' => $user,
+            'isAdmin' => $this->dbi->isSuperUser() ? 'isSuperUser' : '-NormalUser',
         ]);
     }
 

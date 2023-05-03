@@ -32,13 +32,34 @@
             {{ table.name }}
           </a>
         </li>
-
-        {% if table.comment is not empty %}
+          {% if table.comment is not empty %}
           <span class="breadcrumb-comment" draggable="false">“{{ table.comment }}”</span>
         {% endif %}
       {% elseif database.comment is not empty %}
         <span class="breadcrumb-comment" draggable="false">“{{ database.comment }}”</span>
       {% endif %}
     {% endif %}
+
+    {% if user is not empty %}
+    <li class="breadcrumb-item">
+       &nbsp;|| {{ show_icons('TabsMode') ? get_image('eye') }}
+      <a>
+        {% if show_text('TabsMode') %}{% trans 'User:' %}{% endif %}
+        {{ user.name }}
+        ({{ isAdmin }})
+      </a>
+    </li>
+    {% endif %}
+
+    {% if user is empty %}
+    <li class="breadcrumb-item">
+      {{ show_icons('TabsMode') ? get_image('eye') }}
+      <a>
+      {% if show_text('TabsMode') %}{% trans 'User:' %}{% endif %}
+      --unknown--
+      </a>
+    </li>
+    {% endif %}
+
   </ol>
 </nav>
